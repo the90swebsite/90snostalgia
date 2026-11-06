@@ -141,16 +141,53 @@
       box-shadow: 1px 1px 0 var(--magenta);
     }
 
-    #nostalgia-btn:focus-visible {
+    #nostalgia-btn:focus-visible,
+    #music-btn:focus-visible {
       outline: 3px solid var(--cyan);
       outline-offset: 4px;
     }
 
+    #music-btn {
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: bold;
+      color: var(--ink);
+      background: var(--cyan);
+      border: 3px solid var(--green);
+      border-radius: 999px;
+      padding: 0.7rem 1.8rem;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--green);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+
+    #music-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 6px 6px 0 var(--green);
+    }
+
+    #music-btn:active {
+      transform: translate(3px, 3px);
+      box-shadow: 1px 1px 0 var(--green);
+    }
+
+    #music-note {
+      min-height: 1.2em;
+      font-size: 0.85rem;
+      opacity: 0.8;
+      text-align: center;
+    }
+
     footer {
       text-align: center;
-      padding: 1rem;
+      padding: 1rem 1.5rem 1.5rem;
       font-size: 0.85rem;
-      opacity: 0.7;
+      opacity: 0.8;
+      line-height: 1.6;
+    }
+
+    footer a {
+      color: var(--lime);
     }
   </style>
 </head>
@@ -169,9 +206,19 @@
       </div>
       <button id="nostalgia-btn" type="button">Click for Nostalgia</button>
     </section>
+
+    <button id="music-btn" type="button" aria-pressed="false">&#9654; Play Music</button>
+    <p id="music-note"></p>
+
+    <audio id="bg-music" loop preload="none"></audio>
   </main>
 
-  <footer>Best viewed at 800x600. Made with love.</footer>
+  <footer>
+    Best viewed at 800x600. Made with love.<br>
+    Music: “<a href="https://budgetpixel.com/background-music/retro-90s-eurodance-a9adcbd8" target="_blank" rel="noopener">Retro 90s Eurodance</a>”
+    by BudgetPixel AI, licensed under
+    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+  </footer>
 
   <script>
     (function () {
@@ -182,6 +229,44 @@
       button.addEventListener("click", function () {
         count += 1;
         countEl.textContent = count;
+      });
+    })();
+
+    (function () {
+      // Direct audio link to "Retro 90s Eurodance" by BudgetPixel AI (CC BY 4.0).
+      // To use your own downloaded file instead, change this to "90s-music.mp3".
+      var MUSIC_SRC = "https://cdn.budgetpixel.com/audio-library/music/retro-eurodance-upbeat-energetic-driving-atxds8.wav";
+
+      var audio = document.getElementById("bg-music");
+      var musicBtn = document.getElementById("music-btn");
+      var note = document.getElementById("music-note");
+
+      audio.src = MUSIC_SRC;
+      audio.volume = 0.5;
+
+      function setPlaying(isPlaying) {
+        musicBtn.innerHTML = isPlaying ? "&#10074;&#10074; Pause Music" : "&#9654; Play Music";
+        musicBtn.setAttribute("aria-pressed", String(isPlaying));
+      }
+
+      musicBtn.addEventListener("click", function () {
+        note.textContent = "";
+        if (audio.paused) {
+          audio.play().then(function () {
+            setPlaying(true);
+          }).catch(function () {
+            note.textContent = "Could not play the music. Check your internet connection or the MUSIC_SRC line in the script.";
+            setPlaying(false);
+          });
+        } else {
+          audio.pause();
+          setPlaying(false);
+        }
+      });
+
+      audio.addEventListener("error", function () {
+        note.textContent = "Music file not found or blocked. Check the MUSIC_SRC line in the script.";
+        setPlaying(false);
       });
     })();
   </script>
