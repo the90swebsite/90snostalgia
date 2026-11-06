@@ -74,7 +74,23 @@
       padding: 1rem 1.5rem 1.5rem;
     }
 
+    .game-row {
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1.75rem;
+      width: 100%;
+      max-width: 960px;
+    }
+
     .counter-card {
+      flex: 1 1 300px;
+      max-width: 460px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       text-align: center;
       padding: clamp(1rem, 3vh, 2rem) clamp(1.25rem, 4vw, 2.5rem);
       border: 4px solid var(--green);
@@ -83,7 +99,6 @@
       box-shadow:
         0 0 24px rgba(0, 249, 42, 0.5),
         8px 8px 0 var(--magenta);
-      max-width: 100%;
     }
 
     .count-label {
@@ -144,10 +159,150 @@
       box-shadow: 1px 1px 0 var(--magenta);
     }
 
+    /* Leaderboard */
+    .leaderboard {
+      flex: 1 1 280px;
+      max-width: 380px;
+      display: flex;
+      flex-direction: column;
+      padding: clamp(1rem, 3vh, 1.5rem) clamp(1rem, 3vw, 1.5rem);
+      border: 4px solid var(--magenta);
+      border-radius: 16px;
+      background: rgba(18, 0, 74, 0.7);
+      box-shadow:
+        0 0 24px rgba(249, 6, 214, 0.5),
+        8px 8px 0 var(--cyan);
+    }
+
+    .leaderboard h2 {
+      font-family: "Bungee", Impact, "Arial Black", sans-serif;
+      font-weight: 400;
+      font-size: clamp(1.1rem, 3.5vw, 1.4rem);
+      text-align: center;
+      color: var(--lime);
+      text-shadow: 2px 2px 0 var(--magenta);
+      margin-bottom: 0.75rem;
+    }
+
+    .score-form {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    #player-name {
+      flex: 1;
+      min-width: 0;
+      font-family: inherit;
+      font-size: 1rem;
+      color: var(--text);
+      background: rgba(0, 0, 0, 0.35);
+      border: 2px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.5rem 0.65rem;
+    }
+
+    #player-name::placeholder {
+      color: rgba(255, 255, 255, 0.55);
+    }
+
+    #save-score-btn {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: var(--ink);
+      background: var(--green);
+      border: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.45rem 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    #save-score-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    #board-msg {
+      min-height: 1.2em;
+      font-size: 0.85rem;
+      color: var(--lime);
+      margin-bottom: 0.5rem;
+    }
+
+    #board-list {
+      list-style: none;
+      max-height: clamp(8rem, 28vh, 18rem);
+      overflow-y: auto;
+    }
+
+    #board-list li {
+      display: grid;
+      grid-template-columns: 2.2rem 1fr auto;
+      align-items: baseline;
+      gap: 0.5rem;
+      padding: 0.4rem 0.25rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.25);
+    }
+
+    #board-list li:last-child {
+      border-bottom: none;
+    }
+
+    .rank {
+      font-weight: bold;
+      color: var(--cyan);
+    }
+
+    .player {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .score {
+      font-family: "Courier New", monospace;
+      font-weight: bold;
+      color: var(--green);
+    }
+
+    #board-list li.top-1 .player,
+    #board-list li.top-1 .score {
+      color: var(--lime);
+    }
+
+    .board-empty {
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.8;
+      padding: 0.75rem 0;
+    }
+
+    #clear-board-btn {
+      align-self: center;
+      margin-top: 0.75rem;
+      font-family: inherit;
+      font-size: 0.8rem;
+      color: var(--text);
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      border-radius: 6px;
+      padding: 0.25rem 0.7rem;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+
+    #clear-board-btn:hover {
+      opacity: 1;
+    }
+
     #nostalgia-btn:focus-visible,
-    #music-btn:focus-visible {
-      outline: 3px solid var(--cyan);
-      outline-offset: 4px;
+    #music-btn:focus-visible,
+    #save-score-btn:focus-visible,
+    #clear-board-btn:focus-visible,
+    #player-name:focus-visible {
+      outline: 3px solid var(--lime);
+      outline-offset: 3px;
     }
 
     #music-btn {
@@ -204,14 +359,27 @@
   </header>
 
   <main>
-    <section class="counter-card" aria-live="polite">
-      <span class="count-label">How Nostalgic are you?</span>
-      <div class="count-display">
-        <span id="count">0</span>
-        <span class="count-unit">nostalgias</span>
-      </div>
-      <button id="nostalgia-btn" type="button">Click for Nostalgia</button>
-    </section>
+    <div class="game-row">
+      <section class="counter-card" aria-live="polite">
+        <span class="count-label">How Nostalgic are you?</span>
+        <div class="count-display">
+          <span id="count">0</span>
+          <span class="count-unit">nostalgias</span>
+        </div>
+        <button id="nostalgia-btn" type="button">Click for Nostalgia</button>
+      </section>
+
+      <aside class="leaderboard" aria-label="Leaderboard">
+        <h2>Leaderboard</h2>
+        <div class="score-form">
+          <input id="player-name" type="text" maxlength="12" placeholder="Your name" autocomplete="off" aria-label="Your name">
+          <button id="save-score-btn" type="button">Save Score</button>
+        </div>
+        <p id="board-msg" aria-live="polite"></p>
+        <ol id="board-list"></ol>
+        <button id="clear-board-btn" type="button">Clear board</button>
+      </aside>
+    </div>
 
     <button id="music-btn" type="button" aria-pressed="false">&#9654; Play Music</button>
     <p id="music-note"></p>
@@ -227,14 +395,145 @@
 
   <script>
     (function () {
+      var BOARD_KEY = "nostalgia-leaderboard-v1";
+      var NAME_KEY = "nostalgia-player-name";
+      var MAX_ENTRIES = 10;
+
       var count = 0;
       var countEl = document.getElementById("count");
       var button = document.getElementById("nostalgia-btn");
+      var nameInput = document.getElementById("player-name");
+      var saveBtn = document.getElementById("save-score-btn");
+      var clearBtn = document.getElementById("clear-board-btn");
+      var msgEl = document.getElementById("board-msg");
+      var listEl = document.getElementById("board-list");
+
+      function loadBoard() {
+        try {
+          var raw = localStorage.getItem(BOARD_KEY);
+          var data = raw ? JSON.parse(raw) : [];
+          if (!Array.isArray(data)) return [];
+          return data.filter(function (e) {
+            return e && typeof e.name === "string" && typeof e.score === "number";
+          });
+        } catch (err) {
+          return [];
+        }
+      }
+
+      function saveBoard(list) {
+        try {
+          localStorage.setItem(BOARD_KEY, JSON.stringify(list));
+          return true;
+        } catch (err) {
+          return false;
+        }
+      }
+
+      function render() {
+        var board = loadBoard();
+        listEl.innerHTML = "";
+
+        if (board.length === 0) {
+          var empty = document.createElement("li");
+          empty.className = "board-empty";
+          empty.style.display = "block";
+          empty.textContent = "No scores yet. Be the first!";
+          listEl.appendChild(empty);
+          return;
+        }
+
+        var medals = ["\uD83E\uDD47", "\uD83E\uDD48", "\uD83E\uDD49"];
+        board.forEach(function (entry, i) {
+          var li = document.createElement("li");
+          if (i === 0) li.className = "top-1";
+
+          var rank = document.createElement("span");
+          rank.className = "rank";
+          rank.textContent = i < 3 ? medals[i] : String(i + 1) + ".";
+
+          var player = document.createElement("span");
+          player.className = "player";
+          player.textContent = entry.name;
+
+          var score = document.createElement("span");
+          score.className = "score";
+          score.textContent = entry.score;
+
+          li.appendChild(rank);
+          li.appendChild(player);
+          li.appendChild(score);
+          listEl.appendChild(li);
+        });
+      }
+
+      function saveScore() {
+        msgEl.textContent = "";
+
+        if (count < 1) {
+          msgEl.textContent = "Click for Nostalgia first!";
+          return;
+        }
+
+        var name = nameInput.value.trim().slice(0, 12) || "Player";
+        try { localStorage.setItem(NAME_KEY, name); } catch (err) {}
+
+        var board = loadBoard();
+        var existing = null;
+        for (var i = 0; i < board.length; i++) {
+          if (board[i].name.toLowerCase() === name.toLowerCase()) {
+            existing = board[i];
+            break;
+          }
+        }
+
+        if (existing) {
+          if (count > existing.score) {
+            existing.score = count;
+          } else {
+            msgEl.textContent = name + " already has a higher score (" + existing.score + ").";
+            return;
+          }
+        } else {
+          board.push({ name: name, score: count });
+        }
+
+        board.sort(function (a, b) { return b.score - a.score; });
+        board = board.slice(0, MAX_ENTRIES);
+
+        if (saveBoard(board)) {
+          msgEl.textContent = "Score saved!";
+        } else {
+          msgEl.textContent = "Could not save (browser storage is blocked).";
+        }
+        render();
+      }
 
       button.addEventListener("click", function () {
         count += 1;
         countEl.textContent = count;
       });
+
+      saveBtn.addEventListener("click", saveScore);
+
+      nameInput.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") saveScore();
+      });
+
+      clearBtn.addEventListener("click", function () {
+        if (window.confirm("Clear the whole leaderboard on this device?")) {
+          saveBoard([]);
+          msgEl.textContent = "Leaderboard cleared.";
+          render();
+        }
+      });
+
+      try {
+        var savedName = localStorage.getItem(NAME_KEY);
+        if (savedName) nameInput.value = savedName;
+      } catch (err) {}
+
+      render();
     })();
 
     (function () {
