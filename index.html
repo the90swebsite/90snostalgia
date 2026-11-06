@@ -28,6 +28,7 @@
 
     body {
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       font-family: "Trebuchet MS", "Segoe UI", Arial, sans-serif;
@@ -36,17 +37,18 @@
         radial-gradient(circle at 15% 15%, rgba(249, 6, 214, 0.35), transparent 40%),
         radial-gradient(circle at 85% 85%, rgba(4, 202, 244, 0.35), transparent 40%),
         linear-gradient(160deg, var(--blue), var(--ink));
+      background-attachment: fixed;
     }
 
     .hero {
       text-align: center;
-      padding: 4rem 1.5rem 2rem;
+      padding: clamp(1rem, 4vh, 3rem) 1.5rem clamp(0.5rem, 2vh, 1.5rem);
     }
 
     .hero h1 {
       font-family: "Bungee", Impact, "Arial Black", sans-serif;
       font-weight: 400;
-      font-size: clamp(2rem, 7vw, 4.5rem);
+      font-size: clamp(1.8rem, min(7vw, 11vh), 4.5rem);
       line-height: 1.1;
       letter-spacing: 0.02em;
       color: var(--lime);
@@ -57,8 +59,8 @@
     }
 
     .hero p {
-      margin-top: 1.5rem;
-      font-size: 1.1rem;
+      margin-top: clamp(0.6rem, 2vh, 1.5rem);
+      font-size: clamp(0.95rem, 2.5vh, 1.1rem);
       opacity: 0.9;
     }
 
@@ -68,13 +70,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-      padding: 2rem 1.5rem 4rem;
+      gap: 1rem;
+      padding: 1rem 1.5rem 1.5rem;
     }
 
     .counter-card {
       text-align: center;
-      padding: 2rem 2.5rem;
+      padding: clamp(1rem, 3vh, 2rem) clamp(1.25rem, 4vw, 2.5rem);
       border: 4px solid var(--green);
       border-radius: 16px;
       background: rgba(18, 0, 74, 0.7);
@@ -94,7 +96,7 @@
     }
 
     .count-display {
-      margin: 0.75rem 0 1.5rem;
+      margin: 0.5rem 0 1rem;
       display: flex;
       align-items: baseline;
       justify-content: center;
@@ -104,7 +106,8 @@
 
     #count {
       font-family: "Courier New", monospace;
-      font-size: clamp(3rem, 12vw, 5.5rem);
+      font-size: clamp(2.5rem, min(12vw, 13vh), 5.5rem);
+      line-height: 1.1;
       font-weight: bold;
       color: var(--green);
       text-shadow: 0 0 12px var(--green);
@@ -125,7 +128,7 @@
       background: var(--lime);
       border: 3px solid var(--magenta);
       border-radius: 999px;
-      padding: 0.85rem 2.2rem;
+      padding: 0.75rem 2.2rem;
       cursor: pointer;
       box-shadow: 4px 4px 0 var(--magenta);
       transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -155,7 +158,7 @@
       background: var(--cyan);
       border: 3px solid var(--green);
       border-radius: 999px;
-      padding: 0.7rem 1.8rem;
+      padding: 0.55rem 1.6rem;
       cursor: pointer;
       box-shadow: 4px 4px 0 var(--green);
       transition: transform 0.1s ease, box-shadow 0.1s ease;
@@ -172,18 +175,21 @@
     }
 
     #music-note {
-      min-height: 1.2em;
       font-size: 0.85rem;
       opacity: 0.8;
       text-align: center;
     }
 
+    #music-note:empty {
+      display: none;
+    }
+
     footer {
       text-align: center;
-      padding: 1rem 1.5rem 1.5rem;
-      font-size: 0.85rem;
+      padding: 0.5rem 1.5rem 1rem;
+      font-size: 0.8rem;
       opacity: 0.8;
-      line-height: 1.6;
+      line-height: 1.5;
     }
 
     footer a {
@@ -215,9 +221,8 @@
 
   <footer>
     Best viewed at 800x600. Made with love.<br>
-    Music: “<a href="https://budgetpixel.com/background-music/retro-90s-eurodance-a9adcbd8" target="_blank" rel="noopener">Retro 90s Eurodance</a>”
-    by BudgetPixel AI, licensed under
-    <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener">CC BY 4.0</a>.
+    Music: “Neon Dreams - 90s synthwave” by lofidreams, via
+    <a href="https://pixabay.com/music/synthwave-neon-dreams-90s-synthwave-344049/" target="_blank" rel="noopener">Pixabay</a>.
   </footer>
 
   <script>
@@ -233,9 +238,8 @@
     })();
 
     (function () {
-      // Direct audio link to "Retro 90s Eurodance" by BudgetPixel AI (CC BY 4.0).
-      // To use your own downloaded file instead, change this to "90s-music.mp3".
-      var MUSIC_SRC = "https://cdn.budgetpixel.com/audio-library/music/retro-eurodance-upbeat-energetic-driving-atxds8.wav";
+      // Local file in the same folder as index.html (or paste a direct .mp3 link)
+      var MUSIC_SRC = "90s-music.mp3";
 
       var audio = document.getElementById("bg-music");
       var musicBtn = document.getElementById("music-btn");
@@ -255,7 +259,7 @@
           audio.play().then(function () {
             setPlaying(true);
           }).catch(function () {
-            note.textContent = "Could not play the music. Check your internet connection or the MUSIC_SRC line in the script.";
+            note.textContent = "Could not play the music. Check the MUSIC_SRC line in the script.";
             setPlaying(false);
           });
         } else {
