@@ -271,6 +271,22 @@
       color: var(--lime);
     }
 
+    #board-list li.demo {
+      opacity: 0.65;
+    }
+
+    .demo-tag {
+      margin-left: 0.4rem;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+      border-radius: 4px;
+      padding: 0 0.3rem;
+      vertical-align: middle;
+    }
+
     .board-empty {
       text-align: center;
       font-size: 0.9rem;
@@ -278,9 +294,16 @@
       padding: 0.75rem 0;
     }
 
+    #demo-note {
+      margin-top: 0.5rem;
+      text-align: center;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
     #clear-board-btn {
       align-self: center;
-      margin-top: 0.75rem;
+      margin-top: 0.5rem;
       font-family: inherit;
       font-size: 0.8rem;
       color: var(--text);
@@ -377,7 +400,8 @@
         </div>
         <p id="board-msg" aria-live="polite"></p>
         <ol id="board-list"></ol>
-        <button id="clear-board-btn" type="button">Clear board</button>
+        <p id="demo-note">Dimmed “demo” scores are placeholders.</p>
+        <button id="clear-board-btn" type="button">Clear my scores</button>
       </aside>
     </div>
 
@@ -399,6 +423,20 @@
       var NAME_KEY = "nostalgia-player-name";
       var MAX_ENTRIES = 10;
 
+      // Set to false to hide the placeholder scores.
+      var SHOW_DEMO_SCORES = true;
+      var DEMO_SCORES = [
+        { name: "DialUpDave", score: 250 },
+        { name: "TamaTina", score: 214 },
+        { name: "Y2K_Yolanda", score: 188 },
+        { name: "NapsterNick", score: 150 },
+        { name: "BeeperBeth", score: 133 },
+        { name: "FloppyDisk", score: 97 },
+        { name: "DiscmanDan", score: 64 },
+        { name: "CyberCindy", score: 42 },
+        { name: "PogMaster", score: 21 }
+      ];
+
       var count = 0;
       var countEl = document.getElementById("count");
       var button = document.getElementById("nostalgia-btn");
@@ -407,6 +445,9 @@
       var clearBtn = document.getElementById("clear-board-btn");
       var msgEl = document.getElementById("board-msg");
       var listEl = document.getElementById("board-list");
+      var demoNote = document.getElementById("demo-note");
+
+      if (!SHOW_DEMO_SCORES) demoNote.style.display = "none";
 
       function loadBoard() {
         try {
@@ -430,8 +471,27 @@
         }
       }
 
+      function getDisplayBoard() {
+        var real = loadBoard().map(function (e) {
+          return { name: e.name, score: e.score, demo: false };
+        });
+
+        var combined = real.slice();
+        if (SHOW_DEMO_SCORES) {
+          DEMO_SCORES.forEach(function (d) {
+            var taken = real.some(function (r) {
+              return r.name.toLowerCase() === d.name.toLowerCase();
+            });
+            if (!taken) combined.push({ name: d.name, score: d.score, demo: true });
+          });
+        }
+
+        combined.sort(function (a, b) { return b.score - a.score; });
+        return combined.slice(0, MAX_ENTRIES);
+      }
+
       function render() {
-        var board = loadBoard();
+        var board = getDisplayBoard();
         listEl.innerHTML = "";
 
         if (board.length === 0) {
@@ -446,7 +506,10 @@
         var medals = ["\uD83E\uDD47", "\uD83E\uDD48", "\uD83E\uDD49"];
         board.forEach(function (entry, i) {
           var li = document.createElement("li");
-          if (i === 0) li.className = "top-1";
+          var classes = [];
+          if (i === 0) classes.push("top-1");
+          if (entry.demo) classes.push("demo");
+          li.className = classes.join(" ");
 
           var rank = document.createElement("span");
           rank.className = "rank";
@@ -455,6 +518,12 @@
           var player = document.createElement("span");
           player.className = "player";
           player.textContent = entry.name;
+          if (entry.demo) {
+            var tag = document.createElement("span");
+            tag.className = "demo-tag";
+            tag.textContent = "demo";
+            player.appendChild(tag);
+          }
 
           var score = document.createElement("span");
           score.className = "score";
@@ -521,9 +590,9 @@
       });
 
       clearBtn.addEventListener("click", function () {
-        if (window.confirm("Clear the whole leaderboard on this device?")) {
+        if (window.confirm("Clear your saved scores on this device?")) {
           saveBoard([]);
-          msgEl.textContent = "Leaderboard cleared.";
+          msgEl.textContent = "Your scores were cleared.";
           render();
         }
       });
